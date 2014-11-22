@@ -43,6 +43,23 @@
 #pragma mark -
 #pragma mark Initialization and teardown
 
+- (id)initWithProgressiveDownloadableURL:(NSURL *)url
+{
+    if (!(self = [super init]))
+    {
+        return nil;
+    }
+    
+    [self yuvConversionSetup];
+    
+    self.url = url;
+    self.asset = nil;
+    // self.progressiveDownloader = [ProgressiveDownloader progressiveDownloaderWithURL:url];
+    
+    return self;
+
+}
+
 - (id)initWithURL:(NSURL *)url;
 {
     if (!(self = [super init])) 

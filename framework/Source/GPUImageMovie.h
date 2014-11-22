@@ -2,6 +2,7 @@
 #import <AVFoundation/AVFoundation.h>
 #import "GPUImageContext.h"
 #import "GPUImageOutput.h"
+#import "ProgressiveDownloader.h"
 
 /** Protocol for getting Movie played callback.
  */
@@ -14,6 +15,7 @@
  */
 @interface GPUImageMovie : GPUImageOutput
 
+@property (readwrite, retain) ProgressiveDownloader *progressiveDownloader;
 @property (readwrite, retain) AVAsset *asset;
 @property (readwrite, retain) AVPlayerItem *playerItem;
 @property(readwrite, retain) NSURL *url;
@@ -46,6 +48,7 @@
 /// @name Initialization and teardown
 - (id)initWithAsset:(AVAsset *)asset;
 - (id)initWithPlayerItem:(AVPlayerItem *)playerItem;
+- (id)initWithProgressiveDownloadableURL:(NSURL *)url;
 - (id)initWithURL:(NSURL *)url;
 - (void)yuvConversionSetup;
 
