@@ -13,7 +13,7 @@
 
 /** Source object for filtering movies
  */
-@interface GPUImageMovie : GPUImageOutput
+@interface GPUImageMovie : GPUImageOutput <ProgressiveDownloaderDelegate>
 
 @property (readwrite, retain) ProgressiveDownloader *progressiveDownloader;
 @property (readwrite, retain) AVAsset *asset;
@@ -61,4 +61,8 @@
 - (void)cancelProcessing;
 - (void)processMovieFrame:(CMSampleBufferRef)movieSampleBuffer; 
 
+#pragma mark ProgressiveDownloaderDelegate methods
+-(void) videoReadyToDecode;
+-(void) newBytesAvailable;
+-(void) dowloadFinished;
 @end

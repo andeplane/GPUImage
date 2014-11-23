@@ -10,7 +10,7 @@
 #import <AVFoundation/AVFoundation.h>
 
 @protocol ProgressiveDownloaderDelegate
-
+@required
 -(void) videoReadyToDecode;
 -(void) newBytesAvailable;
 -(void) dowloadFinished;

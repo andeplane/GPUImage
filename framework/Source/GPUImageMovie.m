@@ -54,7 +54,7 @@
     
     self.url = url;
     self.asset = nil;
-    // self.progressiveDownloader = [ProgressiveDownloader progressiveDownloaderWithURL:url];
+    self.progressiveDownloader = [ProgressiveDownloader progressiveDownloaderWithURL:url delegate:self];
     
     return self;
 
@@ -71,7 +71,7 @@
 
     self.url = url;
     self.asset = nil;
-
+    self.progressiveDownloader = nil;
     return self;
 }
 
@@ -86,7 +86,8 @@
 
     self.url = nil;
     self.asset = asset;
-
+    self.progressiveDownloader = nil;
+    
     return self;
 }
 
@@ -101,6 +102,7 @@
 
     self.url = nil;
     self.asset = nil;
+    self.progressiveDownloader = nil;
     self.playerItem = playerItem;
 
     return self;
@@ -773,6 +775,18 @@
 
 - (BOOL)videoEncodingIsFinished {
     return videoEncodingIsFinished;
+}
+
+-(void) videoReadyToDecode {
+    
+}
+
+-(void) newBytesAvailable {
+    
+}
+
+-(void) dowloadFinished {
+    
 }
 
 @end

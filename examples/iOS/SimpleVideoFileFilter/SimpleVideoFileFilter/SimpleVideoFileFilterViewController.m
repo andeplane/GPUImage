@@ -27,13 +27,16 @@
     movieFile.runBenchmark = YES;
     movieFile.playAtActualSpeed = NO;
     filter = [[GPUImagePixellateFilter alloc] init];
+    
+    
 //    filter = [[GPUImageUnsharpMaskFilter alloc] init];
     
-    [movieFile addTarget:filter];
+    //[movieFile addTarget:filter];
 
     // Only rotate the video for display, leave orientation the same for recording
     GPUImageView *filterView = (GPUImageView *)self.view;
     [filter addTarget:filterView];
+    [movieFile addTarget:filterView];
 
     // In addition to displaying to the screen, write out a processed version of the movie to disk
     NSString *pathToMovie = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents/Movie.m4v"];
@@ -42,6 +45,7 @@
 
     movieWriter = [[GPUImageMovieWriter alloc] initWithMovieURL:movieURL size:CGSizeMake(640.0, 480.0)];
     [filter addTarget:movieWriter];
+    [movieFile addTarget:movieWriter];
 
     // Configure this for video from the movie file, where we want to preserve all video frames and audio samples
     movieWriter.shouldPassthroughAudio = YES;
