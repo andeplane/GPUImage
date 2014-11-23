@@ -250,6 +250,47 @@
     return assetReader;
 }
 
+- (void)initializeProgressiveProcessing
+{
+    reader = [self createAssetReader];
+    
+    self.progressiveReaderVideoTrackOutput = nil;
+    
+    audioEncodingIsFinished = YES;
+    for( AVAssetReaderOutput *output in reader.outputs ) {
+        if( [output.mediaType isEqualToString:AVMediaTypeVideo] ) {
+            self.progressiveReaderVideoTrackOutput = output;
+        }
+    }
+    
+    if ([reader startReading] == NO)
+    {
+        NSLog(@"Error reading from file at URL: %@", self.url);
+        return;
+    }
+}
+
+- (void)processAssetProgressive
+{
+    NSLog(@"Will process some more stuff");
+    __unsafe_unretained GPUImageMovie *weakSelf = self;
+    
+        while (reader.status == AVAssetReaderStatusReading)
+        {
+            NSLog(@"We are still reading...");
+            [weakSelf readNextVideoFrameFromOutput:weakSelf.progressiveReaderVideoTrackOutput];
+        }
+    
+    NSLog(@"Not reading anymore, now we are %ld",reader.status);
+    
+        if (reader.status == AVAssetReaderStatusCompleted) {
+            
+            [reader cancelReading];
+            
+            [weakSelf endProcessing];
+        }
+}
+
 - (void)processAsset
 {
     reader = [self createAssetReader];
@@ -803,14 +844,14 @@
             NSLog(@"The track is loaded");
             
             blockSelf.asset = inputAsset;
-            [blockSelf processAsset];
+            [blockSelf initializeProgressiveProcessing];
             blockSelf = nil;
         });
     }];
 }
 
 -(void) newBytesAvailable {
-    
+    [self processAssetProgressive];
 }
 
 -(void) dowloadFinished {

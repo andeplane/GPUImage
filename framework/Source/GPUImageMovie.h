@@ -20,6 +20,10 @@
 @property (readwrite, retain) AVPlayerItem *playerItem;
 @property(readwrite, retain) NSURL *url;
 
+/* Progressive asset stuff
+*/
+@property(readwrite,retain) AVAssetReaderOutput *progressiveReaderVideoTrackOutput;
+
 /** This enables the benchmarking mode, which logs out instantaneous and average frame times to the console
  */
 @property(readwrite, nonatomic) BOOL runBenchmark;

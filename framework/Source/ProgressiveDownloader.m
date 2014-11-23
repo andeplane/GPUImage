@@ -80,6 +80,7 @@
 
 -(void) connectionDidFinishLoading:(NSURLConnection *)connection
 {
+    NSLog(@"Download is finished");
     [self.file closeFile];
     [self.delegate dowloadFinished];
 }
