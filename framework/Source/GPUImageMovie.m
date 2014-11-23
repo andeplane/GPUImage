@@ -51,7 +51,7 @@
     }
     
     [self yuvConversionSetup];
-    
+    NSLog(@"Will use progressive downloader...");
     self.url = url;
     self.asset = nil;
     self.progressiveDownloader = [ProgressiveDownloader progressiveDownloaderWithURL:url delegate:self];
@@ -168,6 +168,11 @@
 {
     synchronizedMovieWriter = movieWriter;
     movieWriter.encodingLiveVideo = NO;
+}
+
+- (void)startProgressiveDownload
+{
+    [self.progressiveDownloader start];
 }
 
 - (void)startProcessing
@@ -778,7 +783,30 @@
 }
 
 -(void) videoReadyToDecode {
+    NSLog(@"Video is ready to decode...");
+    previousFrameTime = kCMTimeZero;
+    previousActualFrameTime = CFAbsoluteTimeGetCurrent();
+
+    AVURLAsset *inputAsset = self.progressiveDownloader.asset;
     
+    GPUImageMovie __block *blockSelf = self;
+    
+    [inputAsset loadValuesAsynchronouslyForKeys:[NSArray arrayWithObject:@"tracks"] completionHandler: ^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSError *error = nil;
+            AVKeyValueStatus tracksStatus = [inputAsset statusOfValueForKey:@"tracks" error:&error];
+            if (tracksStatus != AVKeyValueStatusLoaded)
+            {
+                NSLog(@"This track is not loaded");
+                return;
+            }
+            NSLog(@"The track is loaded");
+            
+            blockSelf.asset = inputAsset;
+            [blockSelf processAsset];
+            blockSelf = nil;
+        });
+    }];
 }
 
 -(void) newBytesAvailable {

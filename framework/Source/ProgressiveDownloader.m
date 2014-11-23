@@ -20,6 +20,7 @@
 -(id) initWithURL:(NSURL*)url delegate:(id<ProgressiveDownloaderDelegate>)delegate
 {
     if(self = [super init]) {
+        NSLog(@"Progressive downloader init with url: %@", url);
         self.url = url;
         self.delegate = delegate;
         self.connection = [NSURLConnection connectionWithRequest:[NSURLRequest requestWithURL:self.url] delegate:self];
@@ -42,6 +43,7 @@
 
 -(void) start
 {
+    NSLog(@"Starting downloading...");
     [self.connection start];
 }
 
@@ -49,8 +51,13 @@
 {
     NSDictionary *inputOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];
     self.asset = [[AVURLAsset alloc] initWithURL:self.fileURL options:inputOptions];
-    if(self.asset.isReadable && self.asset.isPlayable) return YES;
     
+    if(self.asset.isReadable && self.asset.isPlayable) {
+        NSLog(@"Asset is readable");
+        return YES;
+    }
+    
+    NSLog(@"Asset is not readable");
     self.asset = nil;
     return NO;
 }
@@ -60,7 +67,9 @@
 {
     [self.file writeData:data];
     self.bytesSoFar += data.length;
+    NSLog(@"Got data: %ld (%ld bytes so far)", data.length, self.bytesSoFar);
     if(!self.asset) {
+        NSLog(@"Trying to open asset...");
         if([self tryOpenAsset]) {
             [self.delegate videoReadyToDecode];
         }

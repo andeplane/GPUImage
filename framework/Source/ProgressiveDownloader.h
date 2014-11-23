@@ -31,7 +31,7 @@
 -(id) initWithURL:(NSURL*)url delegate:(id<ProgressiveDownloaderDelegate>)delegate;
 -(void) openTempFile;
 -(BOOL) tryOpenAsset;
-
+-(void) start;
 
 #pragma mark NASURLSessionDataDelegate methods
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data;
